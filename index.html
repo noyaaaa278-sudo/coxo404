@@ -1,0 +1,532 @@
+<!--
+                         .      .
+                ./       |      |        \.
+              .:(        |i __ j|        ):`.
+            .'   `._     |`::::'|     _.'    `.
+          .'        "---.j `::' f.---"         `.
+    _____/     ___  ______      __    __   ___   \_   __
+   |      \   |   ||      |`__'|  \  /  | |   | |" \ |  |
+   |  .-.  | .'   `|_    _|\--/|   \/   |.'   `.|   \|  |
+   |  |_|  | |  i  | |  |  :"":|        ||  i  ||    |  |
+   |       / | .^. | |  |  ::::|        || .^. ||       |
+   |  .-.  \ | | | | |  |   :: |        || | | ||  |\   |
+   |  | |  |.' """ `.|  |      |  i  i  j' """ `.  | \  | 
+   |  `-'  ||   _   ||  |      |  |\/|  |   _   |  | [  |
+  [|      / |  | |  ||  |      |  |  |  |  | |  |  | |  |].
+ ] `-----'  :--' `--::--'      `--' ::--"--::`--"--' `--':[
+ |      __  ::-"""`.:' "--.    .----::.----:: ,.---._    :|
+ [  .-""  "`'              \  /      "      `'       `-. :].
+]:.'                        \/                          `.:[
+|/                                                        \|
+// Website    : BUAT SENDIRI BOS                                                                        
+-->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Noyaaaa - Auto Save Google Sheets</title>
+  <link rel="icon" href="https://zoropicture.photos/Logo%20%26%20fav%20icon/favicon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://giffiles.alphacoders.com/221/221829.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ffcc00;
+      position: relative;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-family: 'Metal Mania', cursive;
+      font-size: 48px;
+      color: #ffde00;
+      text-shadow: -2px -2px 0 #3b4cca,
+                   2px -2px 0 #3b4cca,
+                   -2px 2px 0 #3b4cca,
+                   2px 2px 0 #3b4cca;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      resize: vertical;
+      height: 50px;
+      box-shadow: 0 0 10px #0597d1;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #333;
+      font-weight: bold;
+      font-family: monospace;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 20px;
+      background: rgba(20, 20, 20, 0.95);
+      color: #eee;
+      border: 2px solid #00eeff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px #00eeff;
+    }
+    th {
+      background: linear-gradient(135deg, #00e1ff, #3b4cca);
+      color: #fff;
+      padding: 14px;
+      text-transform: uppercase;
+      font-family: 'Metal Mania', cursive;
+      font-size: 18px;
+      letter-spacing: 1px;
+      border-bottom: 3px solid #00eeff;
+    }
+    td {
+      padding: 12px;
+      text-align: left;
+      background-color: #1a1a1a;
+      border-bottom: 1px solid #333;
+      transition: background 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+    td:hover {
+      background-color: #292929;
+      box-shadow: inset 0 0 8px #1900ff;
+    }
+    td.copied {
+      animation: blink 0.5s ease-in-out 2;
+    }
+    @keyframes blink {
+      0%, 100% { background-color: #1a1a1a; }
+      50% { background-color: #ffde00; color: #000; }
+    }
+    /* Tombol lama disembunyikan */
+    .btn-copy {
+      display: none;
+    }
+    
+    /* ============ STYLE PUNCH BUTTON ============ */
+    .punch-button-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+    
+    .button-border {
+      border: 6px solid #ffae70;
+      outline: 3px solid #ff8c00;
+      border-radius: 100%;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(255, 174, 112, 0.5);
+    }
+    
+    .button-border-copy-id {
+      border-color: #70b8ff;
+      outline-color: #3a86ff;
+      box-shadow: 0 0 15px rgba(112, 184, 255, 0.5);
+    }
+    
+    .button-base {
+      background-color: #75221c;
+      outline: 2px solid black;
+      position: relative;
+      border-radius: 100%;
+      transition: all 0.2s ease;
+    }
+    
+    .button-base-copy-id {
+      background-color: #1c3c75;
+    }
+    
+    .button {
+      border-radius: 100%;
+      font-size: 14px;
+      font-weight: bold;
+      outline: 2px solid black;
+      border: 4px solid;
+      border-left-color: #e7b8b4;
+      border-top-color: #f8c9c5;
+      border-bottom-color: #4e1814;
+      border-right-color: #79241e;
+      background-color: #e64539;
+      cursor: pointer;
+      color: #ffee83;
+      padding: 20px 15px;
+      transform: translateY(-20%);
+      transition: all 0.2s ease;
+      font-family: 'Segoe UI', sans-serif;
+      min-width: 100px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .button-copy-id {
+      border-left-color: #b4c4e7;
+      border-top-color: #c5d1f8;
+      border-bottom-color: #14144e;
+      border-right-color: #1e2479;
+      background-color: #3945e6;
+      color: #83d5ff;
+    }
+    
+    .button:hover {
+      transform: translateY(-10%);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+    
+    .button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .button-clicked {
+      animation: punchEffect 0.3s ease;
+    }
+    
+    @keyframes punchEffect {
+      0% { transform: translateY(-20%) scale(1); }
+      50% { transform: translateY(0) scale(0.95); }
+      100% { transform: translateY(-20%) scale(1); }
+    }
+    
+    .copyright {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #ffde00;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #000;
+    }
+    
+    .lock-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+    
+    .lock-modal {
+      background: transparent;
+      border: none;
+      padding: 0;
+      text-align: center;
+      animation: pop 0.3s ease;
+    }
+    
+    .lock-modal img {
+      max-width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #ffffff;
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lock-overlay" id="lockOverlay">
+    <div class="lock-modal">
+      <img src="https://media1.tenor.com/m/qlMYmNIPoH4AAAAC/busted-arrest.gif" alt="Locked" />
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>
+      <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHpiZDY1Z3lwaTVqaWt1dng3ZDd4MnI5c2pucWFvMDV6dDh0dXlxNyZlcD12MV9zdGlja2Vyc19yZWxhdGVkJmN0PXM/AyCbZVuOqD5MA/giphy.gif" alt="Pikachu" style="height:48px; vertical-align: middle; margin-right: 10px;" />
+      WITHDRAW CEPAT
+    </h2>     
+    <textarea id="input" placeholder="Paste data withdraw di sini..."></textarea>
+
+    <div id="tableContainer" style="overflow-x:auto;">
+      <table id="outputTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th></th>
+            <th>Nominal</th>
+            <th></th>
+            <th></th>
+            <th>ID</th>
+          </tr>
+        </thead>
+        <tbody id="outputBody"></tbody>
+      </table>
+    </div>  
+
+    <!-- PUNCH BUTTON -->
+    <div class="punch-button-container">
+      <div class="button-border" id="punchCopyNama">
+        <div class="button-base">
+          <button class="button" onclick="handlePunchCopyNama()">
+            Copy<br>Nama +<br>Nominal
+          </button>
+        </div>
+      </div>
+
+      <div class="button-border button-border-copy-id" id="punchCopyID">
+        <div class="button-base button-base-copy-id">
+          <button class="button button-copy-id" onclick="handlePunchCopyID()">
+            Copy<br>ID Only
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">By <strong>noyaaa.</strong></div>
+  </div>
+
+  <script>
+    // ============ AUTO SAVE KE GOOGLE SHEETS (TANPA NOTIFIKASI) ============
+    // GANTI DENGAN URL DEPLOY GOOGLE APPS SCRIPT ANDA
+    const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxxxx/exec';
+    
+    let saveTimeout = null;
+    let isSaving = false;
+    let lastDataHash = '';
+    
+    // Fungsi untuk mendapatkan semua data withdraw dari tabel
+    function getAllWithdrawData() {
+      const rows = document.querySelectorAll("#outputBody tr");
+      const dataList = [];
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        if (cells.length >= 6) {
+          const nama = cells[0].textContent;
+          const nominal = cells[2].textContent;
+          const id = cells[5].textContent;
+          
+          if (nama || nominal || id) {
+            dataList.push({
+              nama: nama,
+              nominal: nominal,
+              id: id,
+              waktu: new Date().toISOString()
+            });
+          }
+        }
+      });
+      
+      return dataList;
+    }
+    
+    // Hash sederhana untuk cek perubahan
+    function getDataHash() {
+      return JSON.stringify(getAllWithdrawData());
+    }
+    
+    // Simpan ke Google Sheets (tanpa notifikasi)
+    async function saveToGoogleSheets() {
+      const dataList = getAllWithdrawData();
+      
+      if (dataList.length === 0) return;
+      
+      const newHash = getDataHash();
+      if (newHash === lastDataHash && lastDataHash !== '') return;
+      
+      if (isSaving) return;
+      isSaving = true;
+      
+      // Kirim setiap data ke Google Sheets (silent)
+      for (const data of dataList) {
+        try {
+          await fetch(GOOGLE_SHEETS_API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nama: data.nama,
+              nominal: data.nominal,
+              id: data.id,
+              waktu: data.waktu
+            })
+          });
+        } catch (error) {
+          // Error diabaikan, tidak ada notifikasi
+          console.error('Save error:', error);
+        }
+      }
+      
+      lastDataHash = newHash;
+      
+      // Backup ke localStorage (silent)
+      localStorage.setItem('withdrawDataBackup', JSON.stringify(dataList));
+      localStorage.setItem('withdrawDataHash', lastDataHash);
+      
+      isSaving = false;
+    }
+    
+    // Trigger auto-save dengan debounce
+    function triggerAutoSave() {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveToGoogleSheets();
+      }, 1500);
+    }
+    
+    // ============ FUNGSI PARSING DATA (ASLI TIDAK BERUBAH) ============
+    const inputBox = document.getElementById("input");
+    const outputBody = document.getElementById("outputBody");
+    const outputTable = document.getElementById("outputTable");
+    
+    // Simpan fungsi original parse
+    const originalParseFunction = () => {
+      const text = inputBox.value.trim();
+      const lines = text.split("\n").map(line => line.trim()).filter(Boolean).reverse();
+      outputBody.innerHTML = "";
+      
+      lines.forEach(line => {
+        const parts = line.split("\t").map(p => p.trim());
+        if(parts.length < 5) return;
+        const id = parts[0];
+        if(parts[1].toLowerCase() !== "withdraw" && parts[1].toLowerCase() !== "withdraw manual") return;
+        
+        const infoParts = parts[2].split(",").map(x => x.trim());
+        const nama = infoParts[0] || "";
+        const nominalStr = parts[4].replace(/,/g, "");
+        const nominal = parseInt(nominalStr) || 0;
+        
+        const row = document.createElement("tr");
+        const cellsArr = [nama, "", nominal.toString(), "", "", id];
+        cellsArr.forEach(val => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          row.appendChild(td);
+        });
+        
+        outputBody.appendChild(row);
+      });
+      
+      outputTable.style.display = outputBody.innerHTML ? "table" : "none";
+      
+      // Trigger auto-save setelah data berubah
+      triggerAutoSave();
+    };
+    
+    // Pasang event listener
+    inputBox.addEventListener("input", originalParseFunction);
+    
+    // ============ FUNGSI COPY (ASLI TIDAK BERUBAH) ============
+    function showLockMessage() {
+      const overlay = document.getElementById("lockOverlay");
+      overlay.style.display = "flex";
+      setTimeout(() => overlay.style.display = "none", 2000);
+    }
+    
+    document.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      showLockMessage();
+    });
+    
+    document.addEventListener("keydown", function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I","C","J","K"].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && e.key.toUpperCase() === "U")
+      ) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        e.stopPropagation();
+        showLockMessage();
+        return false;
+      }
+    }, true);
+    
+    function handlePunchCopyNama() {
+      const button = document.querySelector('#punchCopyNama .button');
+      button.classList.add('button-clicked');
+      copyNamaNominal();
+      setTimeout(() => button.classList.remove('button-clicked'), 300);
+    }
+    
+    function handlePunchCopyID() {
+      const button = document.querySelector('#punchCopyID .button');
+      button.classList.add('button-clicked');
+      copyID();
+      setTimeout(() => button.classList.remove('button-clicked'), 300);
+    }
+    
+    function copyNamaNominal() {
+      const rows = document.querySelectorAll("#outputBody tr");
+      if (rows.length === 0) {
+        alert("Tidak ada data untuk dicopy!");
+        return;
+      }
+      let clipboardText = "";
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        clipboardText += `${cells[0].textContent}\t${cells[1].textContent}\t${cells[2].textContent}\n`;
+        [0, 1, 2].forEach(i => {
+          cells[i].classList.add("copied");
+          setTimeout(() => cells[i].classList.remove("copied"), 1000);
+        });
+      });
+      navigator.clipboard.writeText(clipboardText.trim());
+    }
+    
+    function copyID() {
+      const rows = document.querySelectorAll("#outputBody tr");
+      if (rows.length === 0) {
+        alert("Tidak ada data untuk dicopy!");
+        return;
+      }
+      let clipboardText = "";
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        clipboardText += `${cells[5].textContent}\n`;
+        cells[5].classList.add("copied");
+        setTimeout(() => cells[5].classList.remove("copied"), 1000);
+      });
+      navigator.clipboard.writeText(clipboardText.trim());
+    }
+    
+    // ============ INIT AUTO SAVE ============
+    // Load backup hash dari localStorage
+    const savedHash = localStorage.getItem('withdrawDataHash');
+    if (savedHash) lastDataHash = savedHash;
+    
+    // Simpan saat halaman ditutup
+    window.addEventListener('beforeunload', () => {
+      saveToGoogleSheets();
+    });
+    
+    // Simpan setiap 30 detik sebagai cadangan (silent)
+    setInterval(() => {
+      if (document.querySelectorAll("#outputBody tr").length > 0) {
+        saveToGoogleSheets();
+      }
+    }, 30000);
+  </script>
+</body>
+</html>
